@@ -1,0 +1,38 @@
+# ============================================================
+# CONFIG FOR: ai-review-service
+# ============================================================
+
+server:
+  port: 8081
+
+spring:
+  ai:
+    ollama:
+      base-url: ${SPRING_AI_OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        model: mistral
+        options:
+          temperature: 0.2
+          num-ctx: 8192
+
+    mcp:
+      client:
+        enabled: true
+        type: SYNC
+        request-timeout: 30s
+        toolcallback:
+          enabled: true
+        sse:
+          connections:
+            code-tools-service:
+              url: ${MCP_CODE_TOOLS_SERVICE_URL:http://localhost:8082}
+
+# Resilience4j Bulkhead — protects Ollama from concurrent overload
+resilience4j:
+  bulkhead:
+    instances:
+      ollama:
+        # Ollama can only run one inference at a time — limit concurrent calls to 1
+        max-concurrent-calls: 1
+        # Don't queue extra calls — reject them immediately with BulkheadFullException.
+        max-wait-duration: 0ms

@@ -1,0 +1,14 @@
+# ============================================================
+# CONFIG FOR: code-tools-service
+# ============================================================
+
+server:
+  port: 8082
+
+spring:
+  ai:
+    mcp:
+      server:
+        enabled: true
+        name: code-review-mcp-server
+        version: 1.0.0

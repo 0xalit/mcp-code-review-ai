@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Points back to our parent POM so we inherit Java version, Spring AI BOM, etc. -->
+    <parent>
+        <groupId>com.projects</groupId>
+        <artifactId>code-review-microservices</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>common-models</artifactId>
+    <!-- Default packaging is "jar", which is what we want.
+         This module will be a plain JAR that other services depend on. -->
+
+    <name>Common Models</name>
+    <description>Shared DTOs (ReviewRequest, ReviewResponse, Issue) used across all services</description>
+
+    <!-- This module has ZERO dependencies.
+         These are simple Java records — no Spring, no Lombok, nothing.
+         That keeps it lightweight: any service can depend on it without pulling in extras. -->
+
+</project>

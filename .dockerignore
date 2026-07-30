@@ -1,0 +1,10 @@
+.git
+.gitignore
+.dockerignore
+.idea
+.vscode
+.mvn/wrapper/maven-wrapper.jar
+**/target
+**/*.log
+HELP.md
+run-all.bat

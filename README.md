@@ -1,86 +1,77 @@
-# MCP Code Review AI (Monolith)
+# MCP Code Review AI (Microservices Architecture)
 
-An automated, AI-driven code review system built with **Spring Boot**, **Spring AI**, and the **Model Context Protocol (MCP)**. This application leverages a local **Ollama** instance to analyze code, identify bugs, and suggest improvements.
+An automated, AI-driven code review microservices platform built with **Spring Boot 3**, **Spring Cloud**, **Spring AI**, **Docker**, **Docker Compose**, and the **Model Context Protocol (MCP)**. This system leverages a local **Ollama** instance to analyze code, identify bugs, measure complexity, and suggest improvements.
 
-> **Note:** This project is currently implemented as a monolithic architecture, but is designed with modularity in mind to facilitate a future transition into microservices (e.g., separating the API gateway from the AI worker services).
+## Microservices Architecture
 
-## Features
+- **`config-service`** (Port `8888`): Centralized Spring Cloud Config Server reading configuration from `config-repo`.
+- **`eureka-server`** (Port `8761`): Service Discovery Server for dynamic registration and routing.
+- **`code-tools-service`** (Port `8082`): Model Context Protocol (MCP) server exposing code analysis tools.
+- **`ai-review-service`** (Port `8081`): AI review orchestrator connecting to Ollama and invoking MCP tools.
+- **`gateway-service`** (Port `8080`): Public entry point with Resilience4j Circuit Breaker, Retry, and Routing.
+- **`zipkin`** (Port `9411`): Distributed tracing server for end-to-end telemetry.
 
-- **Automated Code Analysis:** Submits code snippets or files to an AI model for deep inspection.
-- **Spring AI Integration:** Uses Spring AI's robust abstractions to communicate with local LLMs via Ollama.
-- **MCP Tooling:** Integrates Model Context Protocol to give the AI model structured tools to interact with the codebase context.
-- **Structured JSON Responses:** The AI service (`ReviewAiService`) parses the model's output into strictly typed Java objects (`ReviewResponse`, `Issue`) for easy downstream consumption.
+---
 
-## Tech Stack
+## Running with Docker Compose (Recommended)
 
-- **Java 17+**
-- **Spring Boot 3.x**
-- **Spring AI**
-- **Model Context Protocol (MCP)**
-- **Ollama** (for local LLM execution)
-- **Maven**
+### 1. Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (with Docker Compose v2+)
+- [Ollama](https://ollama.ai/) running on your host machine (with model pulled, e.g. `ollama run mistral`)
 
-## Prerequisites
+### 2. Launch All Microservices
+Run the following command in the root project directory to build containers and start all services in dependency order:
 
-Before running the application, ensure you have the following installed:
-
-1. **Java 17 or higher**
-2. **Maven**
-3. **Ollama**: Download and install [Ollama](https://ollama.ai/). 
-   - Pull your preferred model (e.g., `llama3` or `mistral`): 
-     ```bash
-     ollama run llama3
-     ```
-
-## Configuration
-
-Sensitive configurations, such as specific LLM parameters or API keys (if using remote models), are managed via `application.yml`. 
-
-> **Important:** `application.yml` is explicitly ignored in `.gitignore` to prevent leaking sensitive information. 
-
-Create a `src/main/resources/application.yml` file based on your environment:
-
-```yaml
-spring:
-  application:
-    name: mcp-code-review-ai
-  ai:
-    ollama:
-      base-url: http://localhost:11434
-      chat:
-        options:
-          model: llama3
-          temperature: 0.2
+```bash
+docker compose up --build -d
 ```
 
-## Running the Application
+### 3. Service Health & Dashboards
+Once started, monitor services and health checks:
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/0xalit/mcp-code-review-ai.git
-   cd "mcp-code-review-ai"
+- **Gateway API**: `http://localhost:8080`
+- **Eureka Dashboard**: `http://localhost:8761`
+- **Zipkin Tracing UI**: `http://localhost:9411`
+- **Config Server**: `http://localhost:8888/gateway-service/default`
+
+To check container statuses:
+```bash
+docker compose ps
+```
+
+To view logs:
+```bash
+docker compose logs -f
+```
+
+To stop all services:
+```bash
+docker compose down
+```
+
+---
+
+## Running Locally (Without Docker)
+
+You can also run all services locally using the automated startup script:
+
+1. Start Zipkin and all Spring Boot microservices in order:
+   ```cmd
+   run-all.bat
    ```
 
-2. Build the project:
-   ```bash
-   ./mvnw clean install
-   ```
+---
 
-3. Run the Spring Boot application:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
+## Submitting Code Review Requests
 
-## Project Structure
+Send a `POST` request to the Gateway:
 
-- `com.projects.code_review_ai.web`: REST Controllers handling incoming review requests.
-- `com.projects.code_review_ai.gateway`: Gateway service pattern for routing requests.
-- `com.projects.code_review_ai.ai`: Core AI logic (`ReviewAiService`, `ReviewPromptBuilder`) orchestrating the ChatClient and structured outputs.
-- `com.projects.code_review_ai.mcp`: MCP tool definitions (`CodeReviewTools`) exposed to the LLM.
-- `com.projects.code_review_ai.review`: Domain models representing the requests and parsed issues.
+```bash
+curl -X POST http://localhost:8080/api/v1/reviews \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "public class Calculator { public int add(int a, int b) { return a + b; } }",
+    "language": "java"
+  }'
+```
 
-## Future Roadmap
-
-- [ ] Transition from Monolith to Microservices (`review-gateway-service` and `ai-worker-service`).
-- [ ] Expand MCP toolset for deeper repository context parsing.
-- [ ] Add support for GitHub/GitLab webhook integration.

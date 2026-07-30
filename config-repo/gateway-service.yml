@@ -1,0 +1,33 @@
+# ============================================================
+# CONFIG FOR: gateway-service
+# ============================================================
+
+server:
+  port: 8080
+
+# Resilience4j Circuit Breaker configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      ai-review:
+        # Count-based sliding window: evaluate the last 5 calls
+        sliding-window-size: 5
+        # Open the circuit when ≥50% of calls fail (i.e. 3 out of 5)
+        failure-rate-threshold: 50
+        # Stay OPEN for 10 seconds, then transition to HALF-OPEN
+        wait-duration-in-open-state: 10s
+        # In HALF-OPEN state, allow 2 trial calls before deciding to close or re-open
+        permitted-number-of-calls-in-half-open-state: 2
+
+  retry:
+    instances:
+      ai-review:
+        max-attempts: 3
+        wait-duration: 500ms
+        # Only retry on network/connectivity failures
+        retry-exceptions:
+          - org.springframework.web.client.ResourceAccessException
+          - java.io.IOException
+        # Never retry on validation errors
+        ignore-exceptions:
+          - com.projects.gateway.exception.GatewayException
