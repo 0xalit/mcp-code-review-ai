@@ -54,7 +54,7 @@ The platform is designed as a set of decoupled, specialized microservices manage
 
 ---
 
-##  Architectural Capabilities & Design Patterns
+##  Architectural Capabilities & Microservice Patterns
 
 ### 1. Service Discovery (Eureka)
 Services register with the **Eureka Discovery Server** (`eureka-server` at `http://localhost:8761`). Services discover each other dynamically using service IDs (e.g., `ai-review-service`), eliminating hardcoded hostnames and enabling seamless scaling.
