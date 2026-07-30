@@ -2,7 +2,7 @@
 
 An automated, AI-driven code review system built with **Spring Boot**, **Spring AI**, and the **Model Context Protocol (MCP)**. This application leverages a local **Ollama** instance to analyze code, identify bugs, and suggest improvements.
 
-> **Note:** This project is currently implemented as a monolithic architecture, but is designed with modularity in mind to facilitate a future transition into microservices (e.g., separating the API gateway from the AI worker services).
+> **Note:** This project is currently implemented as a monolithic architecture, but is designed with modularity in mind to facilitate a future transition into microservices
 
 ## Features
 
