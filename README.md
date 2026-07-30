@@ -4,7 +4,7 @@ An automated AI code review platform built with **Spring Boot 3**, **Spring Clou
 
 ---
 
-## 🌟 Core Features
+##  Core Features
 
 - **Automated AI Code Inspection:** Evaluates code snippets or full source files using local LLM models (e.g., Llama 3) via Spring AI abstractions.
 - **Model Context Protocol (MCP) Integration:** Extends LLM capabilities by allowing AI workers to call structured MCP tools (`code-tools-service`) for enhanced context parsing.
@@ -13,7 +13,7 @@ An automated AI code review platform built with **Spring Boot 3**, **Spring Clou
 
 ---
 
-## 🏗️ Microservices Architecture Breakdown
+##  Microservices Architecture Breakdown
 
 The platform is designed as a set of decoupled, specialized microservices managed under a parent Maven multi-module structure:
 
@@ -54,7 +54,7 @@ The platform is designed as a set of decoupled, specialized microservices manage
 
 ---
 
-## ⚡ Architectural Capabilities & Design Patterns
+##  Architectural Capabilities & Design Patterns
 
 ### 1. Service Discovery (Eureka)
 Services register with the **Eureka Discovery Server** (`eureka-server` at `http://localhost:8761`). Services discover each other dynamically using service IDs (e.g., `ai-review-service`), eliminating hardcoded hostnames and enabling seamless scaling.
@@ -79,7 +79,7 @@ Integrated with **Micrometer Tracing (Brave)** and **Zipkin** (`http://localhost
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Core & Runtime:** Java 21, Spring Boot `3.2.5`
 - **Microservices Framework:** Spring Cloud `2023.0.6` (Config Server, Eureka Server, LoadBalancer)
@@ -89,7 +89,7 @@ Integrated with **Micrometer Tracing (Brave)** and **Zipkin** (`http://localhost
 
 ---
 
-## 📋 Prerequisites
+##  Prerequisites
 
 Ensure you have the following installed:
 
@@ -103,7 +103,7 @@ Ensure you have the following installed:
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Option 1: Run with Docker Compose (Recommended)
 
@@ -130,7 +130,7 @@ Or start the individual modules using Maven in order:
 
 ---
 
-## 🧪 API Reference & Usage
+##  API Reference & Usage
 
 ### Submit Code for AI Review
 
@@ -165,7 +165,7 @@ curl -X POST http://localhost:8080/api/v1/review \
 
 ---
 
-## 📊 Dashboard & Observability Links
+##  Dashboard & Observability Links
 
 Once the system is running, you can access the operational dashboards:
 
